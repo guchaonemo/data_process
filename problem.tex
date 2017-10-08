@@ -1,0 +1,238 @@
+\documentclass{article}
+\usepackage{ctex}  %加载包，因为我们在用中文写文档，所以必须加载这个包，否则不支持中文
+\usepackage{multicol}  %加载包
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}  %加载包
+\usepackage{lscape}
+\usepackage{amsmath}
+\usepackage{hyperref}
+%\usepackage{setspace}
+\usepackage{bm}
+\usepackage{CJK}
+\author{顾超}  % 作者
+\date{\today}  %定义时间
+\title{The plan}  %文档标题
+\begin{document}
+\maketitle
+
+\begin{figure}[!ht]
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=0.6\columnwidth]{figure1.eps}
+  \caption{the REV}\label{Fig.lable1}
+\end{figure}
+\section{Method}
+
+First I will introduce the TRT LBE method and how to evaluate the force. Then to make sure the TRT LBE method and force evaluation method is right, I will use it to simulate the poiseuille flow and compare the numerical result with the analytical result.
+
+\section{Convergence of the flow field}
+In order to make sure the result of the study is accurate this work first test the grid convergence of the flow fields and the mach number effect.
+
+\subsection{Grid Convergence}
+We use a uniform mesh of size $N_x \times N_y=N^2$ with $N^2$ between $65^2$ and $2049^2$ to investigate the convergence behavior of the TRT-TLBE.
+The grid spacing $h$ is then $1/(N-1)$.  Another parameter considered here is the Mach number Ma, which is directly related to the compressibility
+error in the LBE. We first study the convergence behavior of the flow for a fixed Mach number Ma =0.01. The error in the velocity field is computed
+as follows,
+\begin{equation}\label{relerr}
+  \|\delta \bm{u}\|_2=\frac{\sum_{j}\|\bm{u}(\bm{x}_j) -\bm u^\ast(\bm x_j)\|_2}{\sum_{j}\|\bm u^\ast(\bm x_j)\|_2}
+\end{equation}
+
+in Eq \ref{relerr} the $\bm u^\ast(\bm x_j)$ is the reference solution of the velocity field. In this paper, the solid volume fraction of simulated cases ranges from $0.01$ to $0.9025$. For the grid convergence study, we just test the convergence when solid volume fraction is $0.01$ and $0.9025$. If the two condition can converge, the cases between $0.01$ and $0.9025$ can also converge. For the two cases, when solid volume fraction is $0.9025$, the gap of the pore space is too narrow so we need more grid points in the whole area of the porous media. The mesh size of this case is between $513$ and $2049$. And the solutions obtained
+with $N^2=2049\times 2049$ as the reference solutions.
+When the solid volume fraction is $0.01$, mesh size of the case is between $65$ and $513$. The reference solutions in this condition is mesh size $N^2=513\times513$.
+In order to compute the convergence order, we used a second-order interpolation method to interpolate the result in the same mesh size.
+
+In Table \ref{tab:tableconv} we give the $L_2$-normed errors of the velocity $\bm u$, as well as the
+rates (n) of convergence of the flow. From it we can get both of two cases, the result can converge. The rates of convergence of the velocity
+is about $2.0$. From this table, we can also see that when the solid volume fraction $\alpha$ is quite large, finer mesh is needed to make the
+result converge.
+
+\begin{table}[!h]
+\centering
+\caption{the $L_2$-norm convergence of the velocity for  \protect\\ $\alpha=0.01$ and $\alpha=0.9025$,$Ma=0.01$}
+\label{tab:tableconv}
+\begin{tabular}{cccc}
+\hline
+ $\alpha$& $0.9025$       &   & $0.01$ \\
+ \hline
+ $N^2$  & $\|\delta \bm{u}\|_2$&$N^2$ & $\|\delta \bm{u}\|_2$ \\
+ \hline
+ $513\times513$    & 1.7898298e-001 &$65\times65$   & 1.656409e-001\\
+ $1025\times1025$  & 5.7747185e-002 &$129\times129$ & 6.797929e-002\\
+ $1601\times1601$  & 1.7665097e-002 &$257\times257$ & 8.561572e-003\\
+\hline
+ n    & 1.9977            & &   2.1370\\
+\hline
+\end{tabular}
+
+\end{table}
+\subsection{Mach Number Effect}
+The Lattice Boltzmann method is base on small-mach-number expansions of the Maxwellian equilibrium. So the errors of the flow field simulated by this method
+depend on the mach number. At the same time, mach number implies compressibility of the flow fields. In this paper we will study the convergence under different
+mach number. We also just study the condition that $\alpha = 0.01$ and $0.9025$ , the mach number changes from $0.01$ to $0.15$.  First we use the result of smallest mach number $Ma=0.01$ and the largest mesh size $N^2_{max}$ as the reference result to compute the errors of the velocity field. While
+$\alpha = 0.9025$ the max mesh size is $N^2_{max}=2049^2$ and then for $\alpha  =0.01$ it has $N^2_{max}=513^2$.
+
+The results are given in Table.~\ref{tab:mach} and Table.~\ref{tab:machsolid}, from the table we can get that the errors in $\bm u$ are independent of Ma, and the rates of convergence for the flows are about $2.0$ . This means the convergence order is second-order and fits well with the theory.
+
+\begin{table*}[!ht]
+\centering
+\caption{Mach-number dependence of the errors in flow fields $\bm u$ with $L_2$-norm. $\alpha=0.9025$,$Ma=0.01$}
+\label{tab:mach}
+\begin{tabular}{cccccc}
+\hline
+ $Ma$   & $0.01$       &$0.02$& $0.05$  & $0.10$ & $0.15$\\
+ \hline
+ $N^2$  & $\|\delta \bm{u}\|_2$&     &      &   &   \\
+ \hline
+ $513\times513$    & 1.7898298e-001 & 1.7898299e-001   & 1.7898312e-001&   1.7898364e-001&  1.7898453e-001\\
+ $1025\times1025$  & 5.7747185e-002 & 5.7747210e-002   & 5.7747482e-002&   5.7748599e-002&  5.7750543e-002\\
+ $1601\times1601$  & 1.7665097e-002 & 1.7665095e-002   & 1.7665322e-002&   1.7666472e-002&  1.7668584e-002\\
+ $2049\times2049$  &                & 1.1695062e-005   & 4.6875350e-005&   1.0583843e-004&  1.6522893e-004\\
+\hline
+ n    & 1.997692   & 1.997692       & 1.997682         & 1.997630      &   1.997534\\
+\hline
+\end{tabular}
+
+\end{table*}
+
+\begin{table*}[!ht]
+\centering
+\caption{Mach-number dependence of the errors in flow fields $\bm u$ with $L_2$-norm. $\alpha=0.01$,$Ma=0.01$}
+\label{tab:machsolid}
+\begin{tabular}{cccccc}
+\hline
+ $Ma$   & $0.01$       &$0.02$& $0.05$  & $0.10$ & $0.15$\\
+ \hline
+ $N^2$  & $\|\delta \bm{u}\|_2$&     &      &   &   \\
+ \hline
+ $65\times65$    & 1.6564091e-001 & 1.65095213e-001   & 1.61955401e-001&   1.55803612e-001&  1.51396636e-001\\
+ $129\times129$  & 6.7979295e-002 & 6.77180187e-002   & 6.62475740e-002&   6.35168616e-002&  6.16477319e-002\\
+ $257\times257$  & 8.5615725e-003 & 8.52466301e-003   & 8.31634990e-003&   7.91837530e-003&  7.62221148e-003\\
+ $513\times513$  &                & 7.08291756e-003   & 7.01100301e-003&   7.30945775e-003&  7.54306894e-004\\
+\hline
+ n    & 2.1370197   & 2.1377558   & 2.1417512        & 2.1491902      &  2.1559898\\
+\hline
+\end{tabular}
+
+\end{table*}
+
+In this paper use the equation below as the characteristic velocity . Then the mach number is $Ma=\frac{u}{c_s}$
+\begin{equation}\label{eq:3}
+  v = \frac{(d-d_s)^2\nabla p}{12\mu}
+\end{equation}
+
+\section{\label{sec:level1}Stokes flow}
+The study of creeping flow between solid bodies arranged in a regular array has great significance on the prediction of seepage through
+porous media and has many applications. In the previous section, from the convergence study we can know that the results get by TRT method
+are accurate. In our study two limits exist in porous media:
+\begin{description}
+  \item[1] Touching squares,the solid volume fraction is $0.9025$.
+  \item[2] Highly porous with solid volume fraction is near 0 , in this paper it reaches $0.01$.
+\end{description}
+First we study the permeability between the two limits of $0.01$ and $0.9025$. And we compare the result with FEM result in [??]. In order to compare with
+the FEM result, we will normalize the permeability with respect to the obstacle length, $L_p$, which is defined as :
+\begin{subequations}\label{eq:Lp}
+   \begin{align}
+     L_p &=4\frac{\text{area}}{\text{circumference}} \\
+     L_p &= d_s   \\
+   \end{align}
+\end{subequations}
+
+
+The permeability is determined by modeling the flow through the REV using Darcy's law as Eq.\ref{eq:6}
+\begin{equation}\label{eq:6}
+  \bm{U} = -\frac{K}{\mu}\nabla p
+\end{equation}
+Then in this paper the normalized permeability is showed in Eq.\ref{eq:7}:
+\begin{equation}\label{eq:7}
+  K^\ast = \frac{K}{d^2_s}=-\frac{\mu\bm{U}}{d^2_s\nabla p }
+\end{equation}
+
+For the Stokes flow, in the paper of Sangani \& Acrivos(1982) has the equation for flow through array of cylinders .
+   \begin{equation}
+   \frac{4\pi \mu U}{F}=-\frac{1}{2}\ln c+a_0+c+a_1 c^2 +a_2 c^3+O(c^4)
+   \end{equation}
+First we use least square method to get $a_0$, $a_1$, $a_2$. Then we compare the result evaluated by the equation with numerical result .
+\subsection{\label{sec:level1}permeability}
+In this section,the TRT model is used to compute the permeability of different solid volume fraction. In this paper we simulate and evaluate the permeability where $c$ ranges from $0.04$ to $0.9025$. Even though K. Yazdchi has simulated this, but in their simulation the solid volume fraction $c$ is between $0.04$ and $0.64$ by FEM method. Because when solid volume fraction is very high,  the grid should be refined to ensure enough grid in the gap occupied by the flow.
+The simulation is shown in Fig\ref{Fig.lable3} . From the figure, we can get that the TRT result agrees well with the FEM result.
+Use Darcy's law to compute the permeability and compare the result with the result in the paper "Microstructural effects on the permeability of periodic fibrous porous media". In this paper ,is has given the result of square when porosity $\varepsilon = 0.85$ ie $c = 0.15$  . Dig out the data in the paper and compare with our result .
+\begin{figure}[!ht]
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=0.6\columnwidth]{figure3.png}\\
+  \caption{'FEM' is the result of FEM method, and 'TRT' is our result of TRT method}\label{Fig.lable3}
+\end{figure}
+\begin{table}[!h]
+\centering
+\caption{the relative error between Ergun Equation and numerical result}
+
+\begin{tabular}{ccc}
+\hline
+ $d_s$& $\kappa_{FEM}$         & $\kappa_{LBM}$ \\
+ 0.8  & 1.20391829718959e-003  & 1.11696652816e-003\\
+ 0.7  & 5.61375857355795e-003  & 5.04181365052e-003\\
+ 0.6  & 1.88203140306559e-002  & 1.73921782033e-002\\
+ 0.5  & 5.35005453492635e-002  & 5.19462705377e-002\\
+ 0.4  & 1.60683080549599e-001  & 1.45774577413e-001\\
+ 0.3  & 4.56774123099134e-001  & 4.45297245925e-001\\
+ 0.2  & 1.70936898930253e+000  & 1.65527195841e+000 \\
+\hline
+\end{tabular}
+
+\end{table}
+
+
+\section{\label{sec:level1}Moderate Reynolds flow}
+\subsection{\label{sec:level1}Relation between force and Re}
+At first, we guess that $Re$ and the force has the equation :
+     \begin{equation}
+         \frac{F}{\mu U}=\frac{k_2{R_e}^2+k_0}{k_3{R_e}+k_4}
+     \end{equation}
+I have used least square method to fit this equation , and the result is as the fig\ref{Fig.lable2} show . From it we can know it can not be this equation.
+\begin{figure}[tb]
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=0.6\columnwidth]{figure2.eps}\\
+  \caption{the line is normalization of least square method result,the $\star$ is normalized numerical result}\label{Fig.lable2}
+\end{figure}
+
+
+So I still  use the two equations below to fit the numerical result.
+For moderate Reynolds flow, when $Re\ll1$ the force and $Re$ has the equation below:
+     \begin{equation}
+         \frac{F}{\mu U}=k_2{R_e}^2+k_0
+     \end{equation}
+
+
+When $Re$ is larger,has the equation below:
+     \begin{equation}
+         \frac{F}{\mu U}= k_3{R_e}+k_4
+     \end{equation}
+\subsection{\label{sec:level1}Then angle effect on the flow}
+Change the direction of the given force from $0$ to $\frac{\pi}{4}$, then compare the result.
+
+\subsection{\label{sec:level1}Compare with Ergun Equation}
+Then we compare the result with the Ergun Equation,Ergun Equation is as below
+         \begin{equation}
+F=150\frac{(1-\varepsilon)^3}{\varepsilon^2}\frac{\nu}{g {d_s}^2}\bm u+1.75\frac{1-\varepsilon}{\varepsilon^2}\frac{1}{gd_s}|\bm u|\bm u
+         \end{equation}
+the relative error between Ergun Equation result and numerical result is as the table below:
+\begin{table}[!h]
+\centering
+\caption{the relative error between Ergun Equation and numerical result}
+
+\begin{tabular}{cc}
+\hline
+solid volume fraction& relative error\%   \\
+0.7656      & 0.036    \\
+0.5625      & 0.097   \\
+0.3906      & 0.47    \\
+0.2500      & 1.44   \\
+0.1406      & 3.75   \\
+0.0625      & 9.23 \\
+0.0156      & 17.98 \\
+\hline
+\end{tabular}
+
+\end{table}
+\end{document}
